@@ -3,9 +3,9 @@ info:
   description: "This is a simple Twilio Server to get understand the API call to and Fro the Server."
   version: "1.0.0"
   title: "Swagger Twilio API"
-host: "localhost:8080"
+host: "cloud-nodejs-sample.herokuapp.com"
 schemes:
-- "http"
+- "https"
 paths:
   /auth:
     get:
