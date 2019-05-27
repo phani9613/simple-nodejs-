@@ -1,0 +1,212 @@
+swagger: "2.0"
+info:
+  description: "This is a simple Twilio Server to get understand the API call to and Fro the Server."
+  version: "1.0.0"
+  title: "Swagger Twilio API"
+host: "localhost:8080"
+schemes:
+- "http"
+paths:
+  /auth:
+    get:
+      x-swagger-router-controller: "Auth"
+      operationId: "getToken"
+      tags:
+      - "Auth"
+      summary: "Authorize the User to Login"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "User has been Authorized"
+          schema:
+            $ref: "#/definitions/Auth_Body"
+            
+        401:
+          description: "Unauthorized User"
+  /getEmail:
+    get:
+      x-swagger-router-controller: "Auth"
+      operationId: "getEmail"
+      tags:
+      - "Auth"
+      summary: "Authorize the User to Login"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "User has been Authorized"
+          schema:
+            $ref: "#/definitions/Auth_Body"
+            
+        401:
+          description: "Unauthorized User"
+
+  /token_auth:
+    post:
+      tags:
+      - "Auth"
+      summary: "Authorize the Existing Token"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Send the Required details to  authenticate"
+        required: true
+        schema:
+          $ref: "#/definitions/token_auth_body"
+      responses:
+        200:
+          description: "User Token has been authorized"
+          schema:
+              $ref: "#/definitions/token_auth_body_success"
+        401:
+          description: "Invalid Token"
+          schema:
+              $ref: "#/definitions/token_auth_body_failure"
+  /create_join_channel :
+    post:
+      x-swagger-router-controller: "Channel"
+      operationId: "new"
+      tags:
+      - "channel"
+      summary: "Creating Twilio Channel"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters :
+      - in: "body"
+        name: "body"
+        description: "Send the Required details to  Create the Channel"
+        required: true
+        schema:
+          $ref: "#/definitions/channel_details"
+      responses:
+        200:
+          description: "Chanel Created"
+          schema:
+              type: "string"
+              example: "Channel Created"
+        400:
+          description: "Failure in Channel Creation"
+          schema:
+              type: "string"
+              example: "Channel Creation Failed"
+  /send_message:
+    post:
+      tags:
+      - "message"
+      summary: "Sending Message in a Channel"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Send the Required details to  deliver the Message"
+        required: true
+        schema:
+          $ref: "#/definitions/message_details"
+      responses:
+        200:
+          description: "Message sent"
+          schema:
+              type: "string"
+              example: "Message has been sent"
+        400:
+          description: "Failure in Message Sending"
+          schema:
+              type: "string"
+              example: "Message Sending Failed"
+              
+definitions:
+
+  Auth_Body:
+    type: "object"
+    properties:
+      identity:
+        type: "string"
+      token:
+        type: "string"
+        
+  token_auth_body:
+    type: "object"
+    properties:
+      device:
+        type: "string"
+      identity :
+        type: "string"
+      emailId:
+        type: "string"
+      country :
+        type: "string"
+        enum: [United States, France, Germany, Italy, Spain, Portugal]
+      language :
+        type: "string"
+        enum: [English, French, German, Italian, Spanish, Portuguese]
+      auth_token:
+        type: "number"
+        
+  token_auth_body_success :
+    type: "object"
+    properties:
+      identity:
+        type: "string"
+      message :
+        type: "string"
+        enum: [authenticated]
+      token:
+        type: "string"
+        
+  token_auth_body_failure :
+    type: "object"
+    properties:
+      identity:
+        type: "string"
+      message :
+        type: "string"
+        enum: [unauthenticated]
+  channel_details :
+    type: "object"
+    properties:
+      channel_sid:
+        type: "string"
+      unique_name  :
+        type: "string"
+      friendly_name:
+        type: "string"
+      country :
+        type: "string"
+        enum: [United States, France, Germany, Italy, Spain, Portugal]
+      language :
+        type: "string"
+        enum: [English, French, German, Italian, Spanish, Portuguese]
+      emailId :
+        type: "string"
+      username:
+        type: "string"
+        enum: [guest, username]
+  message_details :
+    type: "object"
+    properties:
+      message_sid:
+        type: "string"
+      channel_name  :
+        type: "string"
+      message:
+        $ref: "#/definitions/message"
+  message :
+    type: "object"
+    properties:
+      from:
+        type: "string"
+      interaction_text:
+        type: "string"
+      interaction_type:
+        type: "string"
+        enum: [picklist,  content, button, simpletext, image]
+  
+ 
